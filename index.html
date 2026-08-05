@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Banking Portal - Withdrawal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-p-0 flex items-center justify-center min-h-screen">
+
+    <!-- App Container -->
+    <div class="w-full max-w-md p-6 bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 m-4">
+
+        <!-- AUTH SECTION (Login / Signup) -->
+        <div id="auth-section">
+            <!-- Tabs -->
+            <div class="flex border-b border-slate-700 mb-6">
+                <button id="tab-login" onclick="switchTab('login')" class="flex-1 pb-3 text-center font-semibold text-emerald-400 border-b-2 border-emerald-400 transition-all">Sign In</button>
+                <button id="tab-signup" onclick="switchTab('signup')" class="flex-1 pb-3 text-center font-semibold text-slate-400 hover:text-slate-200 transition-all">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" placeholder="user@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Password</label>
+                    <input type="password" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-lg text-white transition-all shadow-lg shadow-emerald-600/30">
+                    Secure Login
+                </button>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="form-signup" onsubmit="handleAuth(event, 'signup')" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+                    <input type="text" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" placeholder="John Doe">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" placeholder="user@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Password</label>
+                    <input type="password" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-semibold rounded-lg text-white transition-all shadow-lg shadow-emerald-600/30">
+                    Create Account
+                </button>
+            </form>
+        </div>
+
+        <!-- DASHBOARD SECTION (Hidden Initially) -->
+        <div id="dashboard-section" class="hidden space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+                <div>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider">Available Balance</p>
+                    <h2 class="text-2xl font-bold text-emerald-400">₦500,000.00</h2>
+                </div>
+                <button onclick="logout()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-slate-300 transition-all">Log Out</button>
+            </div>
+
+            <!-- Withdrawal Form -->
+            <form onsubmit="initiateWithdrawal(event)" class="space-y-4">
+                <h3 class="font-semibold text-slate-200">Withdrawal Details</h3>
+                
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Amount (NGN)</label>
+                    <input type="text" id="withdraw-amount" value="500,000" readonly class="w-full px-4 py-2.5 bg-slate-900/50 border border-slate-700 rounded-lg text-emerald-400 font-bold focus:outline-none cursor-not-allowed">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Select Bank</label>
+                    <select id="bank-name" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white">
+                        <option value="">Choose Bank</option>
+                        <option value="Access Bank">Access Bank</option>
+                        <option value="First Bank of Nigeria">First Bank of Nigeria</option>
+                        <option value="Guaranty Trust Bank (GTB)">Guaranty Trust Bank (GTB)</option>
+                        <option value="United Bank for Africa (UBA)">United Bank for Africa (UBA)</option>
+                        <option value="Zenith Bank">Zenith Bank</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Account Number</label>
+                    <input type="text" id="account-number" maxlength="10" pattern="[0-9]{10}" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none text-white" placeholder="0123456789">
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-500 font-semibold rounded-lg text-white transition-all shadow-lg shadow-blue-600/30">
+                    Proceed to Transfer
+                </button>
+            </form>
+        </div>
+
+        <!-- BC CODE / BIC VERIFICATION MODAL -->
+        <div id="bc-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">⚠️</div>
+                    <h3 class="text-lg font-bold text-white">BC / BIC Code Required</h3>
+                    <p class="text-xs text-slate-400 mt-1">For security clearance of large transfers (₦500,000), please input your authorization Bank Code / BIC token.</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Enter BC / SWIFT Code</label>
+                    <input type="text" id="bc-input" placeholder="e.g., GTBINGLAXXX" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none text-white uppercase font-mono text-center tracking-wider">
+                </div>
+
+                <div class="flex space-x-3 pt-2">
+                    <button onclick="closeBcModal()" class="flex-1 py-2.5 bg-slate-700 hover:bg-slate-600 text-sm font-semibold rounded-lg transition-all">Cancel</button>
+                    <button onclick="verifyBcCode()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold rounded-lg text-white transition-all">Authorize</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUCCESS NOTIFICATION VIEW -->
+        <div id="success-view" class="hidden text-center space-y-4 py-4">
+            <div class="w-16 h-16 bg-emerald-500/10 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl">✓</div>
+            <h3 class="text-xl font-bold text-white">Transfer Successful!</h3>
+            <p class="text-sm text-slate-300">Your transfer of <span class="font-bold text-emerald-400">₦500,000</span> has been submitted for processing with valid verification codes.</p>
+            <button onclick="resetApp()" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 text-sm font-semibold rounded-lg transition-all">Back to Dashboard</button>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Controller -->
+    <script>
+        function switchTab(tab) {
+            const loginForm = document.getElementById('form-login');
+            const signupForm = document.getElementById('form-signup');
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.className = "flex-1 pb-3 text-center font-semibold text-emerald-400 border-b-2 border-emerald-400 transition-all";
+                tabSignup.className = "flex-1 pb-3 text-center font-semibold text-slate-400 hover:text-slate-200 transition-all";
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabSignup.className = "flex-1 pb-3 text-center font-semibold text-emerald-400 border-b-2 border-emerald-400 transition-all";
+                tabLogin.className = "flex-1 pb-3 text-center font-semibold text-slate-400 hover:text-slate-200 transition-all";
+            }
+        }
+
+        function handleAuth(event, type) {
+            event.preventDefault();
+            // Simulate successful authentication and route to dashboard
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+        }
+
+        function logout() {
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('auth-section').classList.remove('hidden');
+        }
+
+        function initiateWithdrawal(event) {
+            event.preventDefault();
+            const accNum = document.getElementById('account-number').value;
+            if(accNum.length !== 10) {
+                alert('Please enter a valid 10-digit Nigerian account number.');
+                return;
+            }
+            // Trigger BC code / BIC security popup modal
+            document.getElementById('bc-modal').classList.remove('hidden');
+        }
+
+        function closeBcModal() {
+            document.getElementById('bc-modal').classList.add('hidden');
+        }
+
+        function verifyBcCode() {
+            const code = document.getElementById('bc-input').value.trim();
+            if(code.length < 4) {
+                alert('Please input a valid BC Code / BIC structure.');
+                return;
+            }
+            // Hide modal and show success screen
+            document.getElementById('bc-modal').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('success-view').classList.remove('hidden');
+        }
+
+        function resetApp() {
+            document.getElementById('success-view').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+            document.getElementById('bc-input').value = '';
+        }
+    </script>
+</body>
+</html>
