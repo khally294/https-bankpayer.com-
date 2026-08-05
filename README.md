@@ -1,1 +1,0 @@
-# https-bankpayer.com
